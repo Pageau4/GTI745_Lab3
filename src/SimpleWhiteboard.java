@@ -1044,7 +1044,7 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 				float angleInRadians = (float)( 2 * Math.PI * j / Constant.NUM_USERS );
 				userContexts[j].setPositionOfCenterOfPalette(
 					Constant.INITIAL_WINDOW_WIDTH / 2 + (float)(radius*Math.cos(angleInRadians)),
-					Constant.INITIAL_WINDOW_HEIGHT / 2 + (float)(radius*Math.sin(angleInRadians))
+					Constant.INITIAL_WINDOW_HEIGHT / 2 + (float)(radius*Math.sin(angleInRadians)) - (150*j)
 				);
 			}
 		}
