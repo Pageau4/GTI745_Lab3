@@ -370,7 +370,6 @@ class Palette {
 	public int frameAll_buttonIndex;
 	public int expandRetractMenu_buttonIndex;
 
-
 	public int currentlyActiveModalButton; // could be equal to any of ink_buttonIndex, select_buttonIndex, manipulate_buttonIndex, camera_buttonIndex
 
 	public int currentlyActiveColorButton; // could be equal to any of black_buttonIndex, red_buttonIndex, green_buttonIndex
@@ -378,12 +377,15 @@ class Palette {
 	public float current_green = 0;
 	public float current_blue = 0;
 
+	public boolean isExpanded = true;
+	public ArrayList< PaletteButton > hiddenButtons = null;
+	
 	public Palette() {
 		final int W = PaletteButton.width;
 		final int H = PaletteButton.height;
 		PaletteButton b = null;
 		buttons = new ArrayList< PaletteButton >();
-
+		hiddenButtons = new ArrayList< PaletteButton >();
 
 		// Create first row of buttons
 
@@ -407,7 +409,7 @@ class Palette {
 		camera_buttonIndex = buttons.size();
 		buttons.add( b );
 		
-		b = new PaletteButton( 5*W, 0, "-", "Reduce the menu to a simple menu", true );
+		b = new PaletteButton( 5*W, 0, "-", "Reduce the menu to a simple menu", false );
 		expandRetractMenu_buttonIndex = buttons.size();
 		buttons.add( b );
 
@@ -728,6 +730,46 @@ class UserContext {
 
 						// Frame the entire drawing
 						gw.frame( drawing.getBoundingRectangle(), true );
+					}
+					else if ( indexOfButton == palette.expandRetractMenu_buttonIndex ) {
+						palette.buttons.get( indexOfButton ).isPressed = true;
+
+						// Cause a new cursor to be created to keep track of this event id in the future
+						cursorIndex = cursorContainer.updateCursorById( id, x, y );
+						cursor = cursorContainer.getCursorByIndex( cursorIndex );
+						cursor.setType( MyCursor.TYPE_INTERACTING_WITH_WIDGET, indexOfButton );
+
+						// Retract the menu if it's expanded
+						if(palette.isExpanded) {
+							
+							// Hide last 5 buttons
+							palette.buttons.get( indexOfButton ).label = "+";
+							palette.buttons.get( indexOfButton ).tooltip = "Expand the menu to a advanced menu";
+							for(int i = 0; i < Constant.ICONS_TO_HIDE; i++) {
+								// Save hidden buttons
+								palette.hiddenButtons.add(palette.buttons.get(palette.buttons.size()-1));
+								palette.buttons.remove(palette.buttons.size()-1);
+							}
+							// If more than 6 hidden buttons, reduce the size of the palette
+							if(Constant.ICONS_TO_HIDE >= 6) {
+								palette.height = palette.height/2;
+							}
+							palette.isExpanded = false;
+						} else {
+							palette.buttons.get( indexOfButton ).label = "-";
+							palette.buttons.get( indexOfButton ).tooltip = "Reduce the menu to a simple menu";
+							// Reshow buttons
+							for(int i = 0; i < Constant.ICONS_TO_HIDE; i++) {
+								// Save hidden buttons
+								palette.buttons.add(palette.hiddenButtons.get(palette.hiddenButtons.size()-1));
+								palette.hiddenButtons.remove(palette.hiddenButtons.size()-1);
+							}
+							// If more than 6 hidden buttons, expand the size of the palette
+							if(Constant.ICONS_TO_HIDE >= 6) {
+								palette.height = palette.height*2;
+							}
+							palette.isExpanded = true;
+						}
 					}
 					else {
 						// The event occurred on some part of the palette where there are no buttons.
