@@ -366,7 +366,9 @@ class Palette {
 	public int red_buttonIndex;
 	public int green_buttonIndex;
 	public int horizFlip_buttonIndex;
+	public int vertFlip_buttonIndex;
 	public int frameAll_buttonIndex;
+	public int expandRetractMenu_buttonIndex;
 
 
 	public int currentlyActiveModalButton; // could be equal to any of ink_buttonIndex, select_buttonIndex, manipulate_buttonIndex, camera_buttonIndex
@@ -404,6 +406,10 @@ class Palette {
 		b = new PaletteButton( 4*W, 0, "Camera", "When active, use one or two other fingers to directly manipulate the camera.", true );
 		camera_buttonIndex = buttons.size();
 		buttons.add( b );
+		
+		b = new PaletteButton( 5*W, 0, "-", "Reduce the menu to a simple menu", true );
+		expandRetractMenu_buttonIndex = buttons.size();
+		buttons.add( b );
 
 
 		// Create second row of buttons
@@ -424,7 +430,11 @@ class Palette {
 		horizFlip_buttonIndex = buttons.size();
 		buttons.add( b );
 
-		b = new PaletteButton( 4*W, H, "Frame all", "Frames the entire drawing.", false );
+		b = new PaletteButton( 4*W, H, "Ver. Flip", "Flip the selection vertically (around a horizontal axis).", false );
+		vertFlip_buttonIndex = buttons.size();
+		buttons.add( b );
+		
+		b = new PaletteButton( 5*W, H, "Frame all", "Frames the entire drawing.", false );
 		frameAll_buttonIndex = buttons.size();
 		buttons.add( b );
 
@@ -684,6 +694,25 @@ class UserContext {
 							Point2D center = s.getBoundingRectangle().getCenter();
 							for ( Point2D p : s.getPoints() ) {
 								p.copy( center.x() - (p.x()-center.x()), p.y() );
+							}
+							s.markBoundingRectangleDirty();
+						}
+						drawing.markBoundingRectangleDirty();
+					}
+					else if ( indexOfButton == palette.vertFlip_buttonIndex ) {
+						palette.buttons.get( indexOfButton ).isPressed = true;
+
+						// Cause a new cursor to be created to keep track of this event id in the future
+						cursorIndex = cursorContainer.updateCursorById( id, x, y );
+						cursor = cursorContainer.getCursorByIndex( cursorIndex );
+						cursor.setType( MyCursor.TYPE_INTERACTING_WITH_WIDGET, indexOfButton );
+
+						// Flip the selected strokes horizontally (around a vertical axis)
+						for ( Stroke s : selectedStrokes ) {
+							Point2D center = s.getBoundingRectangle().getCenter();
+							for ( Point2D p : s.getPoints() ) {
+								//p.copy( center.x() - (p.x()-center.x()), p.y() );
+								p.copy( p.x(), center.y() - (p.y()-center.y()) );
 							}
 							s.markBoundingRectangleDirty();
 						}
