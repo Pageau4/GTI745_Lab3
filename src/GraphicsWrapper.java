@@ -462,6 +462,12 @@ class GraphicsWrapper {
 				drawHVerticalFlipIcon(palette_x, palette_y);
 			} else if(label.equals("Frame all")) {
 				drawFrameAllIcon(palette_x, palette_y);
+			}else if(label.equals("Thin")) {
+				drawThinIcon(palette_x, palette_y);
+			}else if(label.equals("Medium")) {
+				drawMediumIcon(palette_x, palette_y);
+			}else if(label.equals("Thick")) {
+				drawThickIcon(palette_x, palette_y);
 			}
 		}
     }
@@ -638,6 +644,43 @@ class GraphicsWrapper {
         drawLine( palette_x + x1, palette_y + y, palette_x + x2, palette_y + y );
         drawLine( palette_x + x3, palette_y + y2, palette_x + x3, palette_y + y3 );
     }
+    
+public void drawThinIcon(float palette_x, float palette_y) {
+        float x = 25,
+        y = 140, y2 = 150, y3 = 160,
+        w = 40,
+        h = 1, h2 = 3, h3 = 5;
+        gl.glColor3f( 0, 0, 255 );
+        drawRect( palette_x + x, palette_y + y, w, h, true );
+        gl.glColor3f( 0, 0, 0 );
+        drawRect( palette_x + x, palette_y + y2, w, h2, true );
+        drawRect( palette_x + x, palette_y + y3, w, h3, true );
+    }
+
+public void drawMediumIcon(float palette_x, float palette_y) {
+    float x = 110,
+    y = 140, y2 = 150, y3 = 160,
+    w = 40,
+    h = 1, h2 = 3, h3 = 5;
+    gl.glColor3f( 0, 0, 0 );
+    drawRect( palette_x + x, palette_y + y, w, h, true );
+    gl.glColor3f( 0, 0, 255 );
+    drawRect( palette_x + x, palette_y + y2, w, h2, true );
+    gl.glColor3f( 0, 0, 0 );
+    drawRect( palette_x + x, palette_y + y3, w, h3, true );
+}
+
+public void drawThickIcon(float palette_x, float palette_y) {
+    float x = 195,
+    y = 140, y2 = 150, y3 = 160,
+    w = 40,
+    h = 1, h2 = 3, h3 = 5;
+    gl.glColor3f( 0, 0, 0 );
+    drawRect( palette_x + x, palette_y + y, w, h, true );
+    drawRect( palette_x + x, palette_y + y2, w, h2, true );
+    gl.glColor3f( 0, 0, 255 );
+    drawRect( palette_x + x, palette_y + y3, w, h3, true );
+}
 
 }
 
