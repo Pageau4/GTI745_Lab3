@@ -342,7 +342,7 @@ class PaletteButton {
 			gw.drawRect( palette_x + x0, palette_y + y0, width, height );
 		}
 		// draw text label
-		if(label.equals("-") || label.equals("+")) {
+		if(label.equals("-") || label.equals("+") || label.equals("Thin") || label.equals("Medium") || label.equals("Thick")) {
 			int stringWidth = Math.round( gw.stringWidth( label ) );
 			gw.drawString( palette_x + x0+(width-stringWidth)/2, palette_y + y0+height/2+Constant.TEXT_HEIGHT/2, label );
 		} else {
@@ -373,6 +373,9 @@ class Palette {
 	public int vertFlip_buttonIndex;
 	public int frameAll_buttonIndex;
 	public int expandRetractMenu_buttonIndex;
+	public int thin_buttonIndex;
+	public int medium_buttonIndex;
+	public int thick_buttonIndex;
 
 	public int currentlyActiveModalButton; // could be equal to any of ink_buttonIndex, select_buttonIndex, manipulate_buttonIndex, camera_buttonIndex
 
@@ -443,7 +446,20 @@ class Palette {
 		b = new PaletteButton( 5*W, H, "Frame all", "Frames the entire drawing.", false );
 		frameAll_buttonIndex = buttons.size();
 		buttons.add( b );
+		
+		// third row of buttons
+		
+		b = new PaletteButton(   0, 2*H, "Thin", "Thin line thickness", true );
+		thin_buttonIndex = buttons.size();
+		buttons.add( b );
 
+		b = new PaletteButton(   W, 2*H, "Medium", "Medium line thickness", true );
+		medium_buttonIndex = buttons.size();
+		buttons.add( b );
+
+		b = new PaletteButton( 2*W, 2*H, "Thick", "Thick line thickness", true );
+		thick_buttonIndex = buttons.size();
+		buttons.add( b );
 
 		// Initialize remaining state
 
@@ -754,10 +770,6 @@ class UserContext {
 								palette.hiddenButtons.add(palette.buttons.get(palette.buttons.size()-1));
 								palette.buttons.remove(palette.buttons.size()-1);
 							}
-							// If more than 6 hidden buttons, reduce the size of the palette
-							if(Constant.ICONS_TO_HIDE >= 6) {
-								palette.height = palette.height/2;
-							}
 							palette.isExpanded = false;
 						} else {
 							palette.buttons.get( indexOfButton ).label = "-";
@@ -768,12 +780,11 @@ class UserContext {
 								palette.buttons.add(palette.hiddenButtons.get(palette.hiddenButtons.size()-1));
 								palette.hiddenButtons.remove(palette.hiddenButtons.size()-1);
 							}
-							// If more than 6 hidden buttons, expand the size of the palette
-							if(Constant.ICONS_TO_HIDE >= 6) {
-								palette.height = palette.height*2;
-							}
 							palette.isExpanded = true;
 						}
+						
+						// Arrange palette size
+						palette.height = (int) (Constant.BUTTON_HEIGHT * Math.floor(palette.buttons.size()/5));
 					}
 					else {
 						// The event occurred on some part of the palette where there are no buttons.
@@ -1090,7 +1101,7 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 				float angleInRadians = (float)( 2 * Math.PI * j / Constant.NUM_USERS );
 				userContexts[j].setPositionOfCenterOfPalette(
 					Constant.INITIAL_WINDOW_WIDTH / 2 + (float)(radius*Math.cos(angleInRadians)),
-					Constant.INITIAL_WINDOW_HEIGHT / 2 + (float)(radius*Math.sin(angleInRadians)) - (150*j)
+					Constant.INITIAL_WINDOW_HEIGHT / 2 + (float)(radius*Math.sin(angleInRadians)) - (200*j)
 				);
 			}
 		}
