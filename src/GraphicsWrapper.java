@@ -429,7 +429,197 @@ class GraphicsWrapper {
 				glut.glutStrokeCharacter( GLUT.STROKE_MONO_ROMAN, s.charAt(j) );
 		gl.glPopMatrix();
 	}
-
+	
+	public void drawIcons(float palette_x, float palette_y, boolean isExpanded) {
+		drawMoveIcon(palette_x, palette_y);
+		drawInkIcon(palette_x, palette_y);
+		drawSelectIcon(palette_x, palette_y);
+		drawManipIcon(palette_x, palette_y);
+		drawCameraIcon(palette_x, palette_y);
+		if(!isExpanded){
+			drawPlusIcon(palette_x, palette_y);
+		}else{
+			drawMinusIcon(palette_x, palette_y);
+			drawBlackIcon(palette_x, palette_y);
+			drawRedIcon(palette_x, palette_y);
+	        drawGreenIcon(palette_x, palette_y);
+	        drawHorizontalFlipIcon(palette_x, palette_y);
+	        drawHVerticalFlipIcon(palette_x, palette_y);
+	        drawFrameAllIcon(palette_x, palette_y);
+		}
+    }
+    
+    public void drawBlackIcon(float palette_x, float palette_y) {
+        float x = 25,
+        y = 70,
+        w = 40,
+        h = 40;
+        gl.glColor3f( 0, 0, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, true );
+    }
+    
+    public void drawRedIcon(float palette_x, float palette_y) {
+        float x = 110,
+        y = 70,
+        w = 40,
+        h = 40;
+        gl.glColor3f( 255, 0, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, true );
+    }
+    
+    public void drawGreenIcon(float palette_x, float palette_y) {
+        float x = 195,
+        y = 70,
+        w = 40,
+        h = 40;
+        gl.glColor3f( 0, 255, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, true );
+    }
+    
+    public void drawHorizontalFlipIcon(float palette_x, float palette_y) {
+        float x1 = 270, x2 = 330,
+        y = 90;
+        gl.glColor3f( 0, 0, 0 );
+        drawLine( palette_x + x1, palette_y + y, palette_x + x2, palette_y + y );
+    }
+    
+    public void drawHVerticalFlipIcon(float palette_x, float palette_y) {
+        float x = 385,
+        y1 = 70, y2 = 110;
+        gl.glColor3f( 0, 0, 0 );
+        drawLine( palette_x + x, palette_y + y1, palette_x + x, palette_y + y2 );
+    }
+    
+    public void drawFrameAllIcon(float palette_x, float palette_y) {
+        float top_y = 70, top2_y = 80,
+        	  bottom_y = 110, bottom2_y = 100,
+        	  x1 = 445,
+        	  x2 = 455,
+        	  x3 = 490,
+        	  x4 = 500;
+    	gl.glColor3f( 0, 0, 0 );
+        gl.glBegin ( GL.GL_LINES );
+        gl.glVertex3f( palette_x + x1, palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x2,palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x1, palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x1,palette_y + top2_y, 0 );
+        gl.glVertex3f( palette_x + x3, palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x4, palette_y + top_y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + top2_y, 0 );
+        gl.glVertex3f( palette_x + x1, palette_y + bottom_y, 0 );
+        gl.glVertex3f( palette_x + x2,palette_y + bottom_y, 0 );
+        gl.glVertex3f( palette_x + x1, palette_y + bottom2_y, 0 );
+        gl.glVertex3f( palette_x + x1,palette_y + bottom_y, 0 );
+        gl.glVertex3f( palette_x + x3, palette_y + bottom_y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + bottom_y, 0 );
+        gl.glVertex3f( palette_x + x4, palette_y + bottom2_y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + bottom_y, 0 );
+        gl.glEnd();
+    }
+    
+    public void drawCameraIcon(float palette_x, float palette_y) {
+    	float x = 355,
+        y = 15,
+        w = 45,
+        h = 30;
+    	float x2 = 420, x3 = 400, y2 = 15, y3 = 45, y4 = 30;
+        gl.glColor3f( 0, 0, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, false );
+        drawLine( palette_x + x2, palette_y + y2, palette_x + x2, palette_y + y3 );
+        drawLine( palette_x + x3, palette_y + y4, palette_x + x2, palette_y + y2 );
+        drawLine( palette_x + x3, palette_y + y4, palette_x + x2, palette_y + y3 );
+    }
+    
+    public void drawMoveIcon(float palette_x, float palette_y){
+    	gl.glColor3f( 0, 0, 0 );
+        gl.glBegin ( GL.GL_LINES );
+        gl.glVertex3f( palette_x + 35, palette_y + 15, 0 );
+        gl.glVertex3f( palette_x + 40,palette_y + 10, 0 );
+        gl.glVertex3f( palette_x + 40, palette_y + 10, 0 );
+        gl.glVertex3f( palette_x + 45,palette_y + 15, 0 );
+        gl.glVertex3f( palette_x + 40, palette_y + 10, 0 );
+        gl.glVertex3f( palette_x + 40,palette_y + 50, 0 );
+        gl.glVertex3f( palette_x + 35, palette_y + 45, 0 );
+        gl.glVertex3f( palette_x + 40,palette_y + 50, 0 );
+        gl.glVertex3f( palette_x + 45, palette_y + 45, 0 );
+        gl.glVertex3f( palette_x + 40,palette_y + 50, 0 );
+        gl.glVertex3f( palette_x + 15, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 65, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 60, palette_y + 25, 0 );
+        gl.glVertex3f( palette_x + 65, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 65, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 60, palette_y + 35, 0 );
+        gl.glVertex3f( palette_x + 20, palette_y + 25, 0 );
+        gl.glVertex3f( palette_x + 15, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 15, palette_y + 30, 0 );
+        gl.glVertex3f( palette_x + 20, palette_y + 35, 0 );
+        gl.glEnd();
+    }
+    
+    public void drawManipIcon(float palette_x, float palette_y){
+    	float x = 280,
+        y = 15,
+        w = 40, w2 = 10,
+        h = 35, h2 = 20;
+        gl.glColor3f( 0, 0, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, false );
+        drawRect( palette_x + x, palette_y + y, w2, h2, false );
+        drawRect( palette_x + x + 10, palette_y + y, w2, h2, false );
+        drawRect( palette_x + x + 20, palette_y + y, w2, h2, false );
+        drawRect( palette_x + x + 30, palette_y + y, w2, h2, false );
+        drawRect( palette_x + x - 5, palette_y + y + 5, w2 - 5, h2, false );
+    }
+    
+    public void drawInkIcon(float palette_x, float palette_y){
+    	float x = 120, x2 = 110,
+        y = 15, y2 = 30,
+        w = 20, w2 = 40,
+        h = 15, h2 = 20;
+        gl.glColor3f( 0, 0, 0 );
+        drawRect( palette_x + x, palette_y + y, w, h, true );
+        drawRect( palette_x + x2, palette_y + y2, w2, h2, false );
+    }
+    
+    public void drawSelectIcon(float palette_x, float palette_y){
+    	float x = 209,
+        y = 35,
+        w = 15,
+        h = 20;
+    	float x2 = 200, x3 = 240, x4 = 219, x5 = 10, y2 = 50;
+        gl.glColor3f( 0, 0, 0 );
+    	gl.glBegin ( GL.GL_LINES );
+        gl.glVertex3f( palette_x + x2, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + w, 0 );
+        gl.glVertex3f( palette_x + x3, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x4,palette_y + w, 0 );
+        gl.glVertex3f( palette_x + x2, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x2 + x5,palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x4 + x5, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x3,palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x2 + x5, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x2 + x5,palette_y + y2, 0 );
+        gl.glVertex3f( palette_x + x4 + x5, palette_y + y, 0 );
+        gl.glVertex3f( palette_x + x4 + x5,palette_y + y2, 0 );
+        gl.glVertex3f( palette_x + x2 + x5, palette_y + y2, 0 );
+        gl.glVertex3f( palette_x + x4 + x5,palette_y + y2, 0 );
+        gl.glEnd();
+    }
+    
+    public void drawMinusIcon(float palette_x, float palette_y){
+    	float x1 = 470, x2 = 480,
+        y = 30;
+        gl.glColor3f( 0, 0, 0 );
+        drawLine( palette_x + x1, palette_y + y, palette_x + x2, palette_y + y );
+    }
+    
+    public void drawPlusIcon(float palette_x, float palette_y){
+    	float x1 = 470, x2 = 480, x3 = 475,
+        y = 30, y2 = 25, y3 = 35;
+        gl.glColor3f( 0, 0, 0 );
+        drawLine( palette_x + x1, palette_y + y, palette_x + x2, palette_y + y );
+        drawLine( palette_x + x3, palette_y + y2, palette_x + x3, palette_y + y3 );
+    }
 
 }
 
