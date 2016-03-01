@@ -26,6 +26,7 @@ class Stroke {
 	private float color_red = 0;
 	private float color_green = 0;
 	private float color_blue = 0;
+	private float thickness = 1;
 
 	private AlignedRectangle2D boundingRectangle = new AlignedRectangle2D();
 	private boolean isBoundingRectangleDirty = false;
@@ -42,6 +43,10 @@ class Stroke {
 		color_red = r;
 		color_green = g;
 		color_blue = b;
+	}
+	
+	public void setThickness( float t ) {
+		thickness = t;
 	}
 
 	public AlignedRectangle2D getBoundingRectangle() {
@@ -71,6 +76,7 @@ class Stroke {
 
 	public void draw( GraphicsWrapper gw ) {
 		gw.setColor( color_red, color_green, color_blue );
+		gw.setLineWidth(thickness);
 		gw.drawPolyline( points );
 	}
 }
@@ -383,6 +389,8 @@ class Palette {
 	public float current_red = 0;
 	public float current_green = 0;
 	public float current_blue = 0;
+	
+	public int current_thickness = 1;
 
 	public boolean isExpanded = true;
 	public ArrayList< PaletteButton > hiddenButtons = null;
@@ -393,6 +401,7 @@ class Palette {
 		PaletteButton b = null;
 		buttons = new ArrayList< PaletteButton >();
 		hiddenButtons = new ArrayList< PaletteButton >();
+		
 
 		// Create first row of buttons
 
@@ -468,6 +477,7 @@ class Palette {
 		buttons.get( black_buttonIndex ).isPressed = true;
 		currentlyActiveColorButton = black_buttonIndex;
 		current_red = current_green = current_blue = 0;
+		buttons.get( thin_buttonIndex ).isPressed = true;
 
 		// Figure out the width and height of the palette.
 		// To do this, compute a bounding rectangle.
@@ -786,7 +796,22 @@ class UserContext {
 						// Arrange palette size
 						palette.height = (int) (Constant.BUTTON_HEIGHT * Math.floor(palette.buttons.size()/5));
 					}
-					else {
+					else if ( indexOfButton == palette.thin_buttonIndex ) {
+						palette.buttons.get( palette.thin_buttonIndex ).isPressed = true;
+						palette.buttons.get( palette.medium_buttonIndex ).isPressed = false;
+						palette.buttons.get( palette.thick_buttonIndex ).isPressed = false;
+						palette.current_thickness = 1;
+					} else if (indexOfButton == palette.medium_buttonIndex) {
+						palette.buttons.get( palette.thin_buttonIndex ).isPressed = false;
+						palette.buttons.get( palette.medium_buttonIndex ).isPressed = true;
+						palette.buttons.get( palette.thick_buttonIndex ).isPressed = false;
+						palette.current_thickness = 4;
+					} else if (indexOfButton == palette.thick_buttonIndex) {
+						palette.buttons.get( palette.thin_buttonIndex ).isPressed = false;
+						palette.buttons.get( palette.medium_buttonIndex ).isPressed = false;
+						palette.buttons.get( palette.thick_buttonIndex ).isPressed = true;
+						palette.current_thickness = 8;
+					} else {
 						// The event occurred on some part of the palette where there are no buttons.
 						// We cause a new cursor to be created to keep track of this event id in the future.
 						cursorIndex = cursorContainer.updateCursorById( id, x, y );
@@ -921,6 +946,7 @@ class UserContext {
 					// Add the newly drawn stroke to the drawing
 					Stroke newStroke = new Stroke();
 					newStroke.setColor( palette.current_red, palette.current_green, palette.current_blue );
+					newStroke.setThickness( palette.current_thickness );
 					for ( Point2D p : cursor.getPositions() ) {
 						newStroke.addPoint( gw.convertPixelsToWorldSpaceUnits( p ) );
 					}
