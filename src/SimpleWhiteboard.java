@@ -342,9 +342,12 @@ class PaletteButton {
 			gw.drawRect( palette_x + x0, palette_y + y0, width, height );
 		}
 		// draw text label
-		int stringWidth = Math.round( gw.stringWidth( label ) );
-		gw.drawIcons(palette_x, palette_y, true);
-		//gw.drawString( palette_x + x0+(width-stringWidth)/2, palette_y + y0+height/2+Constant.TEXT_HEIGHT/2, label );
+		if(label.equals("-") || label.equals("+")) {
+			int stringWidth = Math.round( gw.stringWidth( label ) );
+			gw.drawString( palette_x + x0+(width-stringWidth)/2, palette_y + y0+height/2+Constant.TEXT_HEIGHT/2, label );
+		} else {
+			gw.drawIcons(palette_x, palette_y, true, label);
+		}
 	}
 }
 

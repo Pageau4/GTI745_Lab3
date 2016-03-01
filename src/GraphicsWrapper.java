@@ -430,26 +430,44 @@ class GraphicsWrapper {
 		gl.glPopMatrix();
 	}
 	
-	public void drawIcons(float palette_x, float palette_y, boolean isExpanded) {
-		drawMoveIcon(palette_x, palette_y);
-		drawInkIcon(palette_x, palette_y);
-		drawSelectIcon(palette_x, palette_y);
-		drawManipIcon(palette_x, palette_y);
-		drawCameraIcon(palette_x, palette_y);
+	public void drawIcons(float palette_x, float palette_y, boolean isExpanded, String label) {
+		if(label.equals("Move")) {
+			drawMoveIcon(palette_x, palette_y);
+		} else if(label.equals("Ink")) {
+			drawInkIcon(palette_x, palette_y);
+		} else if(label.equals("Select")) {
+			drawSelectIcon(palette_x, palette_y);
+		} else if(label.equals("Manip.")) {
+			drawManipIcon(palette_x, palette_y);
+		} else if(label.equals("Camera")) {
+			drawCameraIcon(palette_x, palette_y);
+		}
+		
 		if(!isExpanded){
-			drawPlusIcon(palette_x, palette_y);
+			if(label.equals("+")) {
+				drawPlusIcon(palette_x, palette_y);
+			}
 		}else{
-			drawMinusIcon(palette_x, palette_y);
-			drawBlackIcon(palette_x, palette_y);
-			drawRedIcon(palette_x, palette_y);
-	        drawGreenIcon(palette_x, palette_y);
-	        drawHorizontalFlipIcon(palette_x, palette_y);
-	        drawHVerticalFlipIcon(palette_x, palette_y);
-	        drawFrameAllIcon(palette_x, palette_y);
+			if(label.equals("-")) {
+				drawMinusIcon(palette_x, palette_y);
+			} else if(label.equals("Black")) {
+				drawBlackIcon(palette_x, palette_y);
+			} else if(label.equals("Red")) {
+				drawRedIcon(palette_x, palette_y);
+			} else if(label.equals("Green")) {
+				drawGreenIcon(palette_x, palette_y);
+			} else if(label.equals("Hor. Flip")) {
+				drawHorizontalFlipIcon(palette_x, palette_y);
+			} else if(label.equals("Ver. Flip")) {
+				drawHVerticalFlipIcon(palette_x, palette_y);
+			} else if(label.equals("Frame all")) {
+				drawFrameAllIcon(palette_x, palette_y);
+			}
 		}
     }
     
     public void drawBlackIcon(float palette_x, float palette_y) {
+    	
         float x = 25,
         y = 70,
         w = 40,
