@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
@@ -87,7 +86,7 @@ public class MultitouchFramework
 	public static final int TOUCH_EVENT_MOVE = 1;
 	public static final int TOUCH_EVENT_UP = 2;
 
-	private GraphicsWrapper gw = new GraphicsWrapper();
+	private static GraphicsWrapper gw = new GraphicsWrapper();
 	private SimpleWhiteboard client = null;
 
 	private int preferredWidth, preferredHeight;
@@ -99,7 +98,7 @@ public class MultitouchFramework
 	}
 
 	private void createClient() {
-		client = new SimpleWhiteboard(this,gw);
+		setClient(new SimpleWhiteboard(this,gw));
 	}
 
 	public MultitouchFramework( GLCapabilities caps ) {
@@ -117,11 +116,11 @@ public class MultitouchFramework
 	}
 
 	public void start() {
-		client.startBackgroundWork();
+		getClient().startBackgroundWork();
 	}
 
 	public void stop() {
-		client.stopBackgroundWork();
+		getClient().stopBackgroundWork();
 	}
 
 	// NOTE: calling e.consume() within these methods
@@ -129,22 +128,22 @@ public class MultitouchFramework
 	// so we don't call it.
 	//
 	public void keyPressed( KeyEvent e ) {
-		client.keyPressed(e);
+		getClient().keyPressed(e);
 	}
 	public void keyReleased( KeyEvent e ) {
-		client.keyReleased(e);
+		getClient().keyReleased(e);
 	}
 	public void keyTyped( KeyEvent e ) {
-		client.keyTyped(e);
+		getClient().keyTyped(e);
 	}
 	public void mouseEntered( MouseEvent e ) {
-		client.mouseEntered(e);
+		getClient().mouseEntered(e);
 	}
 	public void mouseExited( MouseEvent e ) {
-		client.mouseExited(e);
+		getClient().mouseExited(e);
 	}
 	public void mouseClicked( MouseEvent e ) {
-		client.mouseClicked(e);
+		getClient().mouseClicked(e);
 	}
 	private void updateHiliting( int x, int y ) {
 		int newIndexOfFingerUnderMouse = fingerContainer.getIndexOfFingerUnderCursorPosition( x, y );
@@ -160,7 +159,7 @@ public class MultitouchFramework
 			if ( indexOfFingerUnderMouse == -1 ) {
 				indexOfFingerUnderMouse = fingerContainer.createFinger( e.getX(), e.getY() );
 				Finger f = fingerContainer.getFingerByIndex( indexOfFingerUnderMouse );
-				client.processMultitouchInputEvent(
+				getClient().processMultitouchInputEvent(
 					f.id,
 					f.position.x(),
 					f.position.y(),
@@ -170,7 +169,7 @@ public class MultitouchFramework
 			isFingerDraggingModeActive = true;
 		}
 		else {
-			client.mousePressed(e);
+			getClient().mousePressed(e);
 		}
 	}
 	public void mouseReleased( MouseEvent e ) {
@@ -179,7 +178,7 @@ public class MultitouchFramework
 		if ( isFingerDraggingModeActive ) {
 			if ( SwingUtilities.isRightMouseButton(e) ) {
 				Finger f = fingerContainer.getFingerByIndex( indexOfFingerUnderMouse );
-				client.processMultitouchInputEvent(
+				getClient().processMultitouchInputEvent(
 					f.id,
 					f.position.x(),
 					f.position.y(),
@@ -193,13 +192,14 @@ public class MultitouchFramework
 			requestRedraw();
 		}
 		else {
-			client.mouseReleased( e );
+			getClient().mouseReleased( e );
 		}
+		//Memento.getInstance().saveSimpleWhiteboard(getClient());
 	}
 	public void mouseMoved( MouseEvent e ) {
 		mouse_x = e.getX();
 		mouse_y = e.getY();
-		client.mouseMoved( e );
+		getClient().mouseMoved( e );
 		updateHiliting( e.getX(), e.getY() );
 	}
 	public void mouseDragged( MouseEvent e ) {
@@ -207,7 +207,7 @@ public class MultitouchFramework
 			Finger f = fingerContainer.getFingerByIndex( indexOfFingerUnderMouse );
 			f.position.get()[0] += e.getX() - mouse_x;
 			f.position.get()[1] += e.getY() - mouse_y;
-			client.processMultitouchInputEvent(
+			getClient().processMultitouchInputEvent(
 				f.id,
 				f.position.x(),
 				f.position.y(),
@@ -215,7 +215,7 @@ public class MultitouchFramework
 			);
 		}
 		else {
-			client.mouseDragged( e );
+			getClient().mouseDragged( e );
 		}
 		mouse_x = e.getX();
 		mouse_y = e.getY();
@@ -244,7 +244,7 @@ public class MultitouchFramework
 	}
 	public void display( GLAutoDrawable drawable ) {
 		gw.set( drawable );
-		client.draw();
+		getClient().draw();
 		fingerContainer.drawFingers( gw, indexOfFingerUnderMouse );
 		// gl.glFlush(); // I don't think this is necessary
 	}
@@ -253,6 +253,7 @@ public class MultitouchFramework
 	// from the event-dispatching thread.
 	//
 	private static void createUI() {
+		
 		if ( ! SwingUtilities.isEventDispatchThread() ) {
 			System.out.println(
 				"Warning: UI is not being created in the Event Dispatch Thread!");
@@ -268,7 +269,7 @@ public class MultitouchFramework
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
 		if ( Constant.HAS_MENUBAR ) {
-			JMenuBar menuBar = mf.client.createMenuBar();
+			JMenuBar menuBar = mf.getClient().createMenuBar();
 			if ( menuBar != null )
 				frame.setJMenuBar(menuBar);
 		}
@@ -284,7 +285,7 @@ public class MultitouchFramework
 		// a JOGL bug https://jogl.dev.java.net/issues/show_bug.cgi?id=135
 		pane.setLayout( new BorderLayout() );
 		if ( Constant.HAS_PANEL_OF_WIDGETS ) {
-			JPanel panelOfWidgets = mf.client.createPanelOfWidgets();
+			JPanel panelOfWidgets = mf.getClient().createPanelOfWidgets();
 			if ( panelOfWidgets != null )
 				pane.add( panelOfWidgets, BorderLayout.LINE_START );
 		}
@@ -305,6 +306,14 @@ public class MultitouchFramework
 				}
 			}
 		);
+	}
+
+	public SimpleWhiteboard getClient() {
+		return client;
+	}
+
+	public void setClient(SimpleWhiteboard client) {
+		this.client = client;
 	}
 
 }

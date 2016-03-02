@@ -1,7 +1,9 @@
 
 import java.util.ArrayList;
-
 import java.awt.Color;
+import java.awt.RenderingHints.Key;
+import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 //import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
+import javax.swing.KeyStroke;
 
 
 
@@ -89,6 +92,7 @@ class Drawing {
 	public void addStroke( Stroke s ) {
 		strokes.add( s );
 		isBoundingRectangleDirty = true;
+		Memento.getInstance().saveStrokes(strokes);
 	}
 
 	public AlignedRectangle2D getBoundingRectangle() {
@@ -980,8 +984,8 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 
 	public MultitouchFramework multitouchFramework = null;
 	public GraphicsWrapper gw = null;
-	JMenuItem testMenuItem1;
-	JMenuItem testMenuItem2;
+	JMenuItem undoMenuItem;
+	JMenuItem redoMenuItem;
 	JButton frameAllButton;
 	JButton testButton1;
 	JButton testButton2;
@@ -1027,11 +1031,15 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if ( source == testMenuItem1 ) {
-			System.out.println("testMenuItem1 has been selected");
+		if ( source == undoMenuItem ) {
+			System.out.println("Undoing");
+			drawing.strokes = Memento.getInstance().undo();
+			multitouchFramework.requestRedraw();
 		}
-		else if ( source == testMenuItem2 ) {
-			System.out.println("testMenuItem2 has been selected");
+		else if ( source == redoMenuItem ) {
+			System.out.println("Redoing");
+			drawing.strokes = Memento.getInstance().redo();
+			multitouchFramework.requestRedraw();
 		}
 		else if ( source == frameAllButton ) {
 			gw.frame( drawing.getBoundingRectangle(), true );
@@ -1049,12 +1057,14 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 	public JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 			JMenu menu = new JMenu("File");
-				testMenuItem1 = new JMenuItem("Test 1");
-				testMenuItem1.addActionListener(this);
-				menu.add(testMenuItem1);
-				testMenuItem2 = new JMenuItem("Test 2");
-				testMenuItem2.addActionListener(this);
-				menu.add(testMenuItem2);
+				undoMenuItem = new JMenuItem("Undo");
+				undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+				undoMenuItem.addActionListener(this);
+				menu.add(undoMenuItem);
+				redoMenuItem = new JMenuItem("Redo");
+				redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+				redoMenuItem.addActionListener(this);
+				menu.add(redoMenuItem);
 			menuBar.add(menu);
 		return menuBar;
 	}
@@ -1155,8 +1165,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 				s
 			);
 		}
-
-
 	}
 
 	public synchronized void keyPressed( KeyEvent e ) {
