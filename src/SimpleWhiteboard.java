@@ -1184,7 +1184,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-<<<<<<< HEAD
 		if ( source == undoMenuItem ) {
 			System.out.println("Undoing");
 			drawing.strokes = Memento.getInstance().undo();
@@ -1197,14 +1196,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 		}
 		else if ( source == frameAllButton ) {
 			gw.frame( drawing.getBoundingRectangle(), true );
-=======
-		if (source == testMenuItem1) {
-			System.out.println("testMenuItem1 has been selected");
-		} else if (source == testMenuItem2) {
-			System.out.println("testMenuItem2 has been selected");
-		} else if (source == frameAllButton) {
-			gw.frame(drawing.getBoundingRectangle(), true);
->>>>>>> 0b53fcb289068865f51db1ecda09ca58d106efde
 			multitouchFramework.requestRedraw();
 		} else if (source == testButton1) {
 			System.out.println("testButton1 has been selected");
@@ -1216,7 +1207,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 	// Called by the framework when creating widgets.
 	public JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-<<<<<<< HEAD
 			JMenu menu = new JMenu("File");
 				undoMenuItem = new JMenuItem("Undo");
 				undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -1227,16 +1217,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 				redoMenuItem.addActionListener(this);
 				menu.add(redoMenuItem);
 			menuBar.add(menu);
-=======
-		JMenu menu = new JMenu("File");
-		testMenuItem1 = new JMenuItem("Test 1");
-		testMenuItem1.addActionListener(this);
-		menu.add(testMenuItem1);
-		testMenuItem2 = new JMenuItem("Test 2");
-		testMenuItem2.addActionListener(this);
-		menu.add(testMenuItem2);
-		menuBar.add(menu);
->>>>>>> 0b53fcb289068865f51db1ecda09ca58d106efde
 		return menuBar;
 	}
 
@@ -1334,10 +1314,6 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 			gw.setFontHeight(Constant.TEXT_HEIGHT);
 			gw.drawString(Constant.TEXT_HEIGHT, 2 * Constant.TEXT_HEIGHT, s);
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> 0b53fcb289068865f51db1ecda09ca58d106efde
 	}
 
 	public synchronized void keyPressed(KeyEvent e) {
