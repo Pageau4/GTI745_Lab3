@@ -407,6 +407,7 @@ class Palette {
 	public int thin_buttonIndex;
 	public int medium_buttonIndex;
 	public int thick_buttonIndex;
+	public int apply_buttonIndex;
 
 	public int currentlyActiveModalButton; // could be equal to any of
 											// ink_buttonIndex,
@@ -502,6 +503,10 @@ class Palette {
 
 		b = new PaletteButton(2 * W, 2 * H, "Thick", "Thick line thickness", true);
 		thick_buttonIndex = buttons.size();
+		buttons.add(b);
+		
+		b = new PaletteButton(3 * W, 2 * H, "Apply", "Appliquer la couleur aux traits", true);
+		apply_buttonIndex = buttons.size();
 		buttons.add(b);
 
 		// Initialize remaining state
@@ -842,6 +847,17 @@ class UserContext {
 						cursorIndex = cursorContainer.updateCursorById(id, x, y);
 						cursor = cursorContainer.getCursorByIndex(cursorIndex);
 						cursor.setType(MyCursor.TYPE_INTERACTING_WITH_WIDGET, indexOfButton);
+					} else if (indexOfButton == palette.apply_buttonIndex) {
+						int red = 0, green = 0, blue = 0;
+						if (palette.buttons.get(palette.black_buttonIndex).isPressed) {
+						} else if (palette.buttons.get(palette.green_buttonIndex).isPressed) {
+							green = 255;
+						} else if (palette.buttons.get(palette.red_buttonIndex).isPressed) {
+							red = 255;
+						}
+						for (Stroke stroke : selectedStrokes) {
+							stroke.setColor(red, green, blue);
+						}
 					} else if (indexOfButton == palette.medium_buttonIndex) {
 						palette.buttons.get(palette.thin_buttonIndex).isPressed = false;
 						palette.buttons.get(palette.medium_buttonIndex).isPressed = true;
