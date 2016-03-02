@@ -468,6 +468,8 @@ class GraphicsWrapper {
 				drawMediumIcon(palette_x, palette_y);
 			}else if(label.equals("Thick")) {
 				drawThickIcon(palette_x, palette_y);
+			}else if(label.equals("Apply")) {
+				drawApplyIcon(palette_x, palette_y);
 			}
 		}
     }
@@ -680,6 +682,14 @@ public void drawThickIcon(float palette_x, float palette_y) {
     drawRect( palette_x + x, palette_y + y2, w, h2, true );
     gl.glColor3f( 0, 0, 255 );
     drawRect( palette_x + x, palette_y + y3, w, h3, true );
+}
+
+public void drawApplyIcon(float palette_x, float palette_y) {
+    float x = 320 , x2 = 295, x3 = 285,
+    	  y = 135, y2 = 165, y3 = 155;
+	gl.glColor3f( 0, 0, 0 );
+    drawLine( palette_x + x, palette_y + y, palette_x +x2, palette_y + y2 );
+    drawLine( palette_x + x2, palette_y + y2, palette_x +x3, palette_y + y3 );
 }
 
 }
