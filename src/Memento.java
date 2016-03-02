@@ -24,7 +24,7 @@ public class Memento {
 		if (presentIndex > 0 && listStrokes.size() > 1) {
 			presentIndex--;
 		}
-		System.out.println("Strokes nb: "+listStrokes.get(presentIndex).size());
+	//	System.out.println("Strokes nb: "+listStrokes.get(presentIndex).size());
 		return listStrokes.get(presentIndex);
 	}
 	
@@ -36,11 +36,11 @@ public class Memento {
 	}
 	
 	public void saveStrokes(ArrayList<Stroke> strokes) {
-		System.out.println("Save1 "+presentIndex+" "+listStrokes.size());
+	//	System.out.println("Save1 "+presentIndex+" "+listStrokes.size());
 		while (presentIndex < listStrokes.size()-1) {
 			listStrokes.remove(presentIndex+1);
 		}
-		System.out.println("Strokes nb: "+strokes.size());
+	//	System.out.println("Strokes nb: "+strokes.size());
 		
 		listStrokes.add(strokes);
 		presentIndex = listStrokes.size()-1;
@@ -50,7 +50,7 @@ public class Memento {
 			System.out.println("Stroke "+i+": "+strokeList.size());
 			i++;
 		}
-		System.out.println("Save2 "+presentIndex+" "+listStrokes.size());
+	//	System.out.println("Save2 "+presentIndex+" "+listStrokes.size());
 	}
 	
 	/*

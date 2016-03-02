@@ -317,5 +317,3 @@ public class MultitouchFramework
 	}
 
 }
-
-

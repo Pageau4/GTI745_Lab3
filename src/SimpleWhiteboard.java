@@ -1172,9 +1172,10 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 			for (int j = 0; j < Constant.NUM_USERS; ++j) {
 				float angleInRadians = (float) (2 * Math.PI * j / Constant.NUM_USERS);
 				userContexts[j].setPositionOfCenterOfPalette(
-						Constant.INITIAL_WINDOW_WIDTH / 2 + (float) (radius * Math.cos(angleInRadians)),
-						Constant.INITIAL_WINDOW_HEIGHT / 2 + (float) (radius * Math.sin(angleInRadians)) - (200 * j));
+						Constant.INITIAL_WINDOW_WIDTH / 2 + (float) (radius * Math.cos(angleInRadians))-(200*j)+100,
+						Constant.INITIAL_WINDOW_HEIGHT / 2 + (float) (radius * Math.sin(angleInRadians)));
 			}
+			
 		}
 
 		gw.setFontHeight(Constant.TEXT_HEIGHT);
@@ -1185,12 +1186,12 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if ( source == undoMenuItem ) {
-			System.out.println("Undoing");
+	//		System.out.println("Undoing");
 			drawing.strokes = Memento.getInstance().undo();
 			multitouchFramework.requestRedraw();
 		}
 		else if ( source == redoMenuItem ) {
-			System.out.println("Redoing");
+//			System.out.println("Redoing");
 			drawing.strokes = Memento.getInstance().redo();
 			multitouchFramework.requestRedraw();
 		}
@@ -1298,7 +1299,25 @@ public class SimpleWhiteboard implements Runnable, ActionListener {
 		for (int j = 0; j < Constant.NUM_USERS; ++j) {
 			userContexts[j].draw(gw);
 		}
-
+		if (Constant.NUM_USERS == 2) {
+		      Point2D center0 = userContexts[0].getPalette().getCenter();
+		      Point2D center1 = userContexts[1].getPalette().getCenter();
+		      
+		      Vector2D direction = Point2D.diff( center1, center0 ).normalized();
+		      direction.copy( - direction.y(), direction.x() ); // rotation de 90 degrés
+		      Point2D centerOfDividingLine = Point2D.average( center0, center1 );
+		      float posX = centerOfDividingLine.x();
+		 //     System.out.println(posX+" "+userContexts[1].getPalette().getBoundingRectangle().getMax().x());
+		      if (posX < userContexts[1].getPalette().getBoundingRectangle().getMax().x()) {
+		    	  userContexts[0].getPalette().x0 = (int) posX;
+		    	  posX = userContexts[1].getPalette().getBoundingRectangle().getMax().x();
+		      }
+		/*      if (posX > userContexts[0].getPalette().getBoundingRectangle().getMin().x()) {
+		    	  userContexts[1].getPalette().x0 = (int) (posX-userContexts[1].getPalette().width);
+		    	  posX = userContexts[0].getPalette().getBoundingRectangle().getMin().x();
+		      }*/
+		      gw.drawLine(posX, 0, posX, gw.getHeight());
+		}
 		// Draw some text to indicate the number of fingers touching the user
 		// interface.
 		// This is useful for debugging.
